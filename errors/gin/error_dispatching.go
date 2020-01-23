@@ -1,4 +1,4 @@
-package errors
+package gin
 
 import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
