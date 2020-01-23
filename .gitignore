@@ -1,0 +1,13 @@
+# Project exclude paths
+**/target/
+*.iml
+pom.xml
+**/.env
+**/.idea
+**/cdk.out
+fun.*
+**/bin
+**/pkg
+**/vendor
+**/bin
+**/assets
