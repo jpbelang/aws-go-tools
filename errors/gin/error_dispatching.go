@@ -3,6 +3,7 @@ package gin
 import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type Handler func(c *gin.Context, err error)
@@ -36,6 +37,34 @@ func (dispatch *Dispatchers) AWS(awsHandlers MH, DefaultHandler Handler) {
 		} else {
 			return false
 		}
+	})
+}
+
+func (dispatch *Dispatchers) Validation(httpCode int) {
+
+	dispatch.handlers = append(dispatch.handlers, func(c *gin.Context, err error) bool {
+
+		validationErrors, ok := err.(validator.ValidationErrors)
+		if !ok {
+
+			return false
+		}
+
+		fieldErrors := make([]interface{}, 0)
+
+		for _, element := range validationErrors {
+
+			one := gin.H{
+				"field": gin.H{
+					"name":      element.Field(),
+					"errorCode": element.Tag()},
+			}
+			fieldErrors = append(fieldErrors, one)
+		}
+
+		errorList := gin.H{"error": fieldErrors}
+		c.JSON(httpCode, errorList)
+		return true
 	})
 }
 
