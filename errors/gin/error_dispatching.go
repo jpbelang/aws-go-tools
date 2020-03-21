@@ -40,6 +40,15 @@ func (dispatch *Dispatchers) AWS(awsHandlers MH, DefaultHandler Handler) {
 	})
 }
 
+func (dispatch *Dispatchers) Always(AlwaysRunHandler Handler) {
+
+	dispatch.handlers = append(dispatch.handlers, func(c *gin.Context, err error) bool {
+
+		AlwaysRunHandler(c, err)
+		return true
+	})
+}
+
 func (dispatch *Dispatchers) Validation(httpCode int) {
 
 	dispatch.handlers = append(dispatch.handlers, func(c *gin.Context, err error) bool {
